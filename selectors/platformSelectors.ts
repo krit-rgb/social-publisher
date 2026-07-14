@@ -52,4 +52,22 @@ export const selectSafeMaxImageSizeMB = createSelector(
   }
 );
 
+// Add this selector to the existing file
+
+/**
+ * The set of MIME types accepted by ALL selected platforms (intersection).
+ * A post going to multiple platforms can only use media all of them support.
+ */
+export const selectSafeAcceptedMimeTypes = createSelector(
+  [selectSelectedPlatformConfigs],
+  (configs): string[] => {
+    if (configs.length === 0) return [];
+    return configs
+      .map((c) => c.acceptedMimeTypes)
+      .reduce((intersection, mimeList) =>
+        intersection.filter((type) => mimeList.includes(type))
+      );
+  }
+);
+
 export { selectSelectedPlatformIds };

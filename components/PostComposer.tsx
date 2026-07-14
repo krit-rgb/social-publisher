@@ -7,8 +7,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useAppSelector } from '@/hooks/redux';
 import { selectSelectedPlatformIds, selectSafeCharacterLimit } from '@/selectors/platformSelectors';
 import { buildPostSchema, type PostFormValues } from '@/validators/postSchema';
+import { useImageUpload } from '@/hooks/useImageUpload';
 import { PlatformSelector } from './PlatformSelector';
 import { CharacterCounter } from './CharacterCounter';
+import { ImageUploader } from './ImageUploader';
 
 export function PostComposer() {
   const selectedPlatformIds = useAppSelector(selectSelectedPlatformIds);
@@ -28,17 +30,17 @@ export function PostComposer() {
     mode: 'onChange',
   });
 
-  // Keep RHF's platforms field in sync with Redux selection,
-  // so validation ("select at least one platform") reflects real state.
   useEffect(() => {
     setValue('platforms', selectedPlatformIds, { shouldValidate: true });
   }, [selectedPlatformIds, setValue]);
 
   const contentValue = watch('content');
 
+  const { images, uploadErrors, addFiles, removeImage, maxImages } = useImageUpload();
+
   const onSubmit = (data: PostFormValues) => {
-    // Wired to postSlice in the next milestone
-    console.log('Validated post:', data);
+    // Wired to postSlice in the next milestone — will include `images`
+    console.log('Validated post:', data, 'images:', images);
   };
 
   return (
@@ -72,6 +74,17 @@ export function PostComposer() {
           )}
           <CharacterCounter current={contentValue?.length ?? 0} max={safeLimit} />
         </div>
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Images</label>
+        <ImageUploader
+          images={images}
+          uploadErrors={uploadErrors}
+          maxImages={maxImages}
+          onAddFiles={addFiles}
+          onRemoveImage={removeImage}
+        />
       </div>
 
       <button
