@@ -2,7 +2,7 @@
 
 import { z } from 'zod';
 import { PLATFORM_CONFIG, PLATFORM_IDS } from '@/config/platforms.config';
-const platformIdEnum  = z.enum(PLATFORM_IDS as [string, ...string[]]);
+const platformIdEnum  = z.enum(PLATFORM_IDS);
 /**
  * Computes the safe character limit as the minimum limit
  * across all currently selected platforms.

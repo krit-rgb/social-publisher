@@ -1,20 +1,26 @@
 // components/PostComposer.tsx
 'use client';
 
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useAppSelector } from '@/hooks/redux';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux';
 import { selectSelectedPlatformIds, selectSafeCharacterLimit } from '@/selectors/platformSelectors';
 import { buildPostSchema, type PostFormValues } from '@/validators/postSchema';
 import { useImageUpload } from '@/hooks/useImageUpload';
+import { fileToBase64 } from '@/utils/fileToBase64';
+import { addPost } from '@/store/postSlice';
+import { addToast } from '@/store/uiSlice';
+import type { Post, PostImage } from '@/types/post';
 import { PlatformSelector } from './PlatformSelector';
 import { CharacterCounter } from './CharacterCounter';
 import { ImageUploader } from './ImageUploader';
 
 export function PostComposer() {
+  const dispatch = useAppDispatch();
   const selectedPlatformIds = useAppSelector(selectSelectedPlatformIds);
   const safeLimit = useAppSelector(selectSafeCharacterLimit);
+  const [isPublishing, setIsPublishing] = useState(false);
 
   const schema = useMemo(() => buildPostSchema(safeLimit), [safeLimit]);
 
@@ -23,7 +29,8 @@ export function PostComposer() {
     handleSubmit,
     watch,
     setValue,
-    formState: { errors, isSubmitting },
+    reset,
+    formState: { errors },
   } = useForm<PostFormValues>({
     resolver: zodResolver(schema),
     defaultValues: { content: '', platforms: [] },
@@ -36,11 +43,42 @@ export function PostComposer() {
 
   const contentValue = watch('content');
 
-  const { images, uploadErrors, addFiles, removeImage, maxImages } = useImageUpload();
+  const { images, uploadErrors, addFiles, removeImage, clearImages, maxImages } = useImageUpload();
 
-  const onSubmit = (data: PostFormValues) => {
-    // Wired to postSlice in the next milestone — will include `images`
-    console.log('Validated post:', data, 'images:', images);
+  const onSubmit = async (data: PostFormValues) => {
+    setIsPublishing(true);
+    try {
+      const postImages: PostImage[] = await Promise.all(
+        images.map(async (img) => ({
+          id: img.id,
+          fileName: img.file.name,
+          sizeBytes: img.file.size,
+          mimeType: img.file.type,
+          previewUrl: await fileToBase64(img.file),
+        }))
+      );
+
+      const now = new Date().toISOString();
+      const post: Post = {
+        id: crypto.randomUUID(),
+        content: data.content,
+        platforms: data.platforms,
+        images: postImages,
+        status: 'published', // simulated — no real API integration per project scope
+        createdAt: now,
+        updatedAt: now,
+      };
+
+      dispatch(addPost(post));
+      dispatch(addToast({ message: 'Post published successfully', type: 'success' }));
+
+      reset({ content: '', platforms: [] });
+      clearImages();
+    } catch (err) {
+      dispatch(addToast({ message: 'Failed to publish post', type: 'error' }));
+    } finally {
+      setIsPublishing(false);
+    }
   };
 
   return (
@@ -89,10 +127,10 @@ export function PostComposer() {
 
       <button
         type="submit"
-        disabled={isSubmitting}
+        disabled={isPublishing}
         className="px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 disabled:opacity-50"
       >
-        {isSubmitting ? 'Publishing...' : 'Publish'}
+        {isPublishing ? 'Publishing...' : 'Publish'}
       </button>
     </form>
   );

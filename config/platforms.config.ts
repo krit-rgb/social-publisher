@@ -43,8 +43,7 @@ export const PLATFORM_CONFIG: PlatformConfigMap = {
     acceptedMimeTypes: ['image/jpeg', 'image/png'],
     colorHex: '#1877F2',
   },
-};
-
+} as const;
 export const PLATFORM_IDS = Object.keys(PLATFORM_CONFIG) as (keyof typeof PLATFORM_CONFIG)[];
 
 export const ALL_PLATFORMS = Object.values(PLATFORM_CONFIG);
