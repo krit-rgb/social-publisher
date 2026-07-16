@@ -1,16 +1,16 @@
-// store/index.ts
-
 import { configureStore } from '@reduxjs/toolkit';
-import platformReducer from './platformSlice'
+
+import platformReducer from './platformSlice';
 import uiReducer from './uiSlice';
 import postReducer from './postSlice';
-
+import analyticsReducer from '@/selectors/analyticsSlice'; // <-- analyticsSlice, NOT analyticsSelectors
 
 export const store = configureStore({
   reducer: {
     platform: platformReducer,
     ui: uiReducer,
-    post: postReducer
+    post: postReducer,
+    analytics: analyticsReducer,
   },
 });
 
