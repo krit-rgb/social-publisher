@@ -1,6 +1,8 @@
-// store/uiSlice.ts
+// store/uiSlice.ts (full updated file)
 
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import type { PlatformId } from '@/types/platform';
+import type { PostStatus } from '@/types/post';
 
 export type DashboardTab = 'analytics' | 'calendar' | 'posts';
 
@@ -16,6 +18,9 @@ interface UiState {
   activeDashboardTab: DashboardTab;
   isComposeModalOpen: boolean;
   toasts: ToastMessage[];
+  searchQuery: string;
+  filterPlatform: PlatformId | 'all';
+  filterStatus: PostStatus | 'all';
 }
 
 const initialState: UiState = {
@@ -24,6 +29,9 @@ const initialState: UiState = {
   activeDashboardTab: 'posts',
   isComposeModalOpen: false,
   toasts: [],
+  searchQuery: '',
+  filterPlatform: 'all',
+  filterStatus: 'all',
 };
 
 const uiSlice = createSlice({
@@ -48,6 +56,15 @@ const uiSlice = createSlice({
     removeToast: (state, action: PayloadAction<string>) => {
       state.toasts = state.toasts.filter((t) => t.id !== action.payload);
     },
+    setSearchQuery: (state, action: PayloadAction<string>) => {
+      state.searchQuery = action.payload;
+    },
+    setFilterPlatform: (state, action: PayloadAction<PlatformId | 'all'>) => {
+      state.filterPlatform = action.payload;
+    },
+    setFilterStatus: (state, action: PayloadAction<PostStatus | 'all'>) => {
+      state.filterStatus = action.payload;
+    },
   },
 });
 
@@ -58,5 +75,8 @@ export const {
   setComposeModalOpen,
   addToast,
   removeToast,
+  setSearchQuery,
+  setFilterPlatform,
+  setFilterStatus,
 } = uiSlice.actions;
 export default uiSlice.reducer;

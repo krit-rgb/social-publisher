@@ -11,8 +11,8 @@ import {
   selectPlatformBreakdown,
   selectPostsPerDay,
   selectAnalyticsTotals,
-} from '@/store/analyticsSelectors';
-import { setAnalyticsRange } from '@/selectors/analyticsSlice';
+} from '@/selectors/analyticsSelectors';
+import { setAnalyticsRange } from '@/store/analyticsSlice';
 
 const RANGE_OPTIONS: { label: string; value: number | null }[] = [
   { label: '7 days', value: 7 },
