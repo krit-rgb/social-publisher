@@ -22,24 +22,26 @@ function DashboardTabsComponent() {
     [dispatch]
   );
 
-  return (
-    <div className="flex gap-1 border-b border-gray-200">
-      {TABS.map((tab) => (
-        <button
-          key={tab.id}
-          type="button"
-          onClick={() => handleTabClick(tab.id)}
-          className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors ${
-            activeTab === tab.id
-              ? 'border-blue-600 text-blue-600'
-              : 'border-transparent text-gray-500 hover:text-gray-700'
-          }`}
-        >
-          {tab.label}
-        </button>
-      ))}
-    </div>
-  );
+ // components/DashboardTabs.tsx — update the return block
+
+return (
+  <div className="flex gap-1 bg-gray-100 rounded-xl p-1 w-fit">
+    {TABS.map((tab) => (
+      <button
+        key={tab.id}
+        type="button"
+        onClick={() => handleTabClick(tab.id)}
+        className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-all ${
+          activeTab === tab.id
+            ? 'bg-white text-gray-900 shadow-sm'
+            : 'text-gray-500 hover:text-gray-700'
+        }`}
+      >
+        {tab.label}
+      </button>
+    ))}
+  </div>
+);
 }
 
 export const DashboardTabs = memo(DashboardTabsComponent);

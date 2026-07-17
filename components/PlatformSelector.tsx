@@ -24,20 +24,22 @@ function PlatformSelectorComponent() {
         const config = PLATFORM_CONFIG[id];
         const isSelected = selectedIds.includes(id);
         return (
-          <button
-            key={id}
-            type="button"
-            onClick={() => handleToggle(id)}
-            className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${
-              isSelected
-                ? 'text-white border-transparent'
-                : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
-            }`}
-            style={isSelected ? { backgroundColor: config.colorHex } : undefined}
-            aria-pressed={isSelected}
-          >
-            {config.label}
-          </button>
+          // components/PlatformSelector.tsx — update button className inside the map
+
+<button
+  key={id}
+  type="button"
+  onClick={() => handleToggle(id)}
+  className={`px-3.5 py-1.5 rounded-full text-sm font-medium border transition-all ${
+    isSelected
+      ? 'text-white border-transparent shadow-sm scale-105'
+      : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+  }`}
+  style={isSelected ? { backgroundColor: config.colorHex } : undefined}
+  aria-pressed={isSelected}
+>
+  {config.label}
+</button>
         );
       })}
     </div>

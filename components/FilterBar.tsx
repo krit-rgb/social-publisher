@@ -38,18 +38,20 @@ function FilterBarComponent() {
 
   return (
     <div className="flex flex-wrap gap-2 mb-4">
-      <input
-        type="text"
-        value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
-        placeholder="Search post content…"
-        className="flex-1 min-w-[180px] px-3 py-1.5 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
-      <select
-        value={filterPlatform}
-        onChange={handlePlatformChange}
-        className="px-2 py-1.5 text-sm border border-gray-300 rounded-md"
-      >
+     
+
+<input
+  type="text"
+  value={inputValue}
+  onChange={(e) => setInputValue(e.target.value)}
+  placeholder="Search post content…"
+  className="flex-1 min-w-[180px] px-3.5 py-2 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-colors"
+/>
+<select
+  value={filterPlatform}
+  onChange={handlePlatformChange}
+  className="px-3 py-2 text-sm border border-gray-200 rounded-xl bg-gray-50 text-gray-700"
+>
         <option value="all">All platforms</option>
         {PLATFORM_IDS.map((id) => (
           <option key={id} value={id}>

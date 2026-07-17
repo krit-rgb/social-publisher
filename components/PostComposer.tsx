@@ -81,57 +81,62 @@ export function PostComposer() {
     }
   };
 
-  return (
-    <form onSubmit={handleSubmit(onSubmit)} className="max-w-xl w-full space-y-4">
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Select platforms
-        </label>
-        <PlatformSelector />
-        {errors.platforms && (
-          <span className="text-sm text-red-600 mt-1 block">{errors.platforms.message}</span>
+  // components/PostComposer.tsx — update the return block
+
+return (
+  <form
+    onSubmit={handleSubmit(onSubmit)}
+    className="w-full max-w-xl bg-white rounded-2xl shadow-sm border border-gray-200 p-6 space-y-5"
+  >
+    <div>
+      <label className="block text-sm font-semibold text-gray-700 mb-2">
+        Platforms
+      </label>
+      <PlatformSelector />
+      {errors.platforms && (
+        <span className="text-sm text-red-600 mt-1.5 block">{errors.platforms.message}</span>
+      )}
+    </div>
+
+    <div>
+      <label htmlFor="content" className="block text-sm font-semibold text-gray-700 mb-2">
+        What's on your mind?
+      </label>
+      <textarea
+        id="content"
+        {...register('content')}
+        rows={5}
+        className="w-full rounded-xl border border-gray-200 bg-gray-50 p-3 text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-colors resize-none"
+        placeholder="What do you want to share?"
+      />
+      <div className="flex justify-between items-center mt-1.5">
+        {errors.content ? (
+          <span className="text-sm text-red-600">{errors.content.message}</span>
+        ) : (
+          <span />
         )}
+        <CharacterCounter current={contentValue?.length ?? 0} max={safeLimit} />
       </div>
+    </div>
 
-      <div>
-        <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-1">
-          Post content
-        </label>
-        <textarea
-          id="content"
-          {...register('content')}
-          rows={5}
-          className="w-full rounded-md border border-gray-300 p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="What do you want to share?"
-        />
-        <div className="flex justify-between items-center mt-1">
-          {errors.content ? (
-            <span className="text-sm text-red-600">{errors.content.message}</span>
-          ) : (
-            <span />
-          )}
-          <CharacterCounter current={contentValue?.length ?? 0} max={safeLimit} />
-        </div>
-      </div>
+    <div>
+      <label className="block text-sm font-semibold text-gray-700 mb-2">Images</label>
+      <ImageUploader
+        images={images}
+        uploadErrors={uploadErrors}
+        maxImages={maxImages}
+        onAddFiles={addFiles}
+        onRemoveImage={removeImage}
+      />
+    </div>
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Images</label>
-        <ImageUploader
-          images={images}
-          uploadErrors={uploadErrors}
-          maxImages={maxImages}
-          onAddFiles={addFiles}
-          onRemoveImage={removeImage}
-        />
-      </div>
-
-      <button
-        type="submit"
-        disabled={isPublishing}
-        className="px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 disabled:opacity-50"
-      >
-        {isPublishing ? 'Publishing...' : 'Publish'}
-      </button>
-    </form>
-  );
+    <button
+      type="submit"
+      disabled={isPublishing}
+      className="w-full px-4 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700 active:bg-blue-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm"
+    >
+      {isPublishing ? 'Publishing…' : 'Publish'}
+    </button>
+  </form>
+);
 }

@@ -6,6 +6,7 @@ import { useAppSelector } from '@/hooks/redux';
 import { selectPostsGroupedByDate } from '@/selectors/calendarSelectors';
 import { getMonthGridDays, toDayKey } from '@/utils/calendarUtils';
 import { CalendarDayCell } from '@/components/CalendarDayCell';
+import { EMPTY_POSTS } from '@/utils/emptyArray';
 
 const WEEKDAY_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
@@ -34,8 +35,8 @@ export function CalendarPanel() {
       return { year: date.getFullYear(), month: date.getMonth() };
     });
   }, []);
-
   const todayKey = toDayKey(new Date());
+
   const monthLabel = new Date(currentMonth.year, currentMonth.month).toLocaleDateString(
     undefined,
     { month: 'long', year: 'numeric' }
@@ -68,18 +69,15 @@ export function CalendarPanel() {
       </div>
 
       <div className="grid grid-cols-7 gap-px bg-gray-100">
-        {gridDays.map((date) => {
-          const dayKey = toDayKey(date);
-          return (
-            <CalendarDayCell
-              key={dayKey}
-              date={date}
-              posts={groupedPosts[dayKey] ?? []}
-              isCurrentMonth={date.getMonth() === currentMonth.month}
-              isToday={dayKey === todayKey}
-            />
-          );
-        })}
+          {gridDays.map((day) => (
+  <CalendarDayCell
+    key={day.dateKey}
+    date={day.date}
+    posts={groupedPosts[day.dateKey] ?? EMPTY_POSTS}
+    isCurrentMonth={day.isCurrentMonth}
+    isToday={day.dateKey === todayKey}
+  />
+))}
       </div>
     </div>
   );

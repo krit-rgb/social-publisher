@@ -5,19 +5,34 @@
  * needed to render a full month grid, including leading/trailing
  * days from adjacent months to fill complete weeks.
  */
-export function getMonthGridDays(year: number, month: number): Date[] {
+export interface CalendarDay {
+  date: Date;
+  dateKey: string;
+  isCurrentMonth: boolean;
+}
+
+export function getMonthGridDays(
+  year: number,
+  month: number
+): CalendarDay[] {
   const firstOfMonth = new Date(year, month, 1);
   const lastOfMonth = new Date(year, month + 1, 0);
 
-  const startWeekday = firstOfMonth.getDay(); // 0 = Sunday
+  const startWeekday = firstOfMonth.getDay();
   const gridStart = new Date(year, month, 1 - startWeekday);
 
-  const totalCells = Math.ceil((startWeekday + lastOfMonth.getDate()) / 7) * 7;
+  const totalCells =
+    Math.ceil((startWeekday + lastOfMonth.getDate()) / 7) * 7;
 
   return Array.from({ length: totalCells }, (_, i) => {
-    const d = new Date(gridStart);
-    d.setDate(gridStart.getDate() + i);
-    return d;
+    const date = new Date(gridStart);
+    date.setDate(gridStart.getDate() + i);
+
+    return {
+      date,
+      dateKey: toDayKey(date),
+      isCurrentMonth: date.getMonth() === month,
+    };
   });
 }
 

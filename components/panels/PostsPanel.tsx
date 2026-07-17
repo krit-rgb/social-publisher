@@ -24,20 +24,27 @@ export function PostsPanel() {
       {filteredPosts.length === 0 ? (
         <p className="text-sm text-gray-500 py-4">No posts match your filters.</p>
       ) : (
-        <ul className="divide-y divide-gray-100">
-          {filteredPosts.map((post) => (
-            <li key={post.id} className="py-3">
-              <p className="text-sm text-gray-800 line-clamp-2">{post.content}</p>
-              <div className="flex items-center gap-2 mt-1">
-                <span className="text-xs text-gray-400">
-                  {new Date(post.createdAt).toLocaleString()}
-                </span>
-                <span className="text-xs uppercase text-gray-400">{post.platforms.join(', ')}</span>
-                <span className="text-xs text-gray-400">· {post.status}</span>
-              </div>
-            </li>
-          ))}
-        </ul>
+        // components/panels/PostsPanel.tsx — update the <ul> and <li> block
+
+<ul className="space-y-3">
+  {filteredPosts.map((post) => (
+    <li
+      key={post.id}
+      className="border border-gray-100 rounded-xl p-4 hover:border-gray-200 hover:shadow-sm transition-all"
+    >
+      <p className="text-sm text-gray-800 line-clamp-2">{post.content}</p>
+      <div className="flex items-center gap-2 mt-2">
+        <span className="text-xs text-gray-400">
+          {new Date(post.createdAt).toLocaleString()}
+        </span>
+        <span className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">
+          {post.platforms.join(', ')}
+        </span>
+        <span className="text-xs text-gray-400 capitalize">{post.status}</span>
+      </div>
+    </li>
+  ))}
+</ul>
       )}
     </div>
   );
